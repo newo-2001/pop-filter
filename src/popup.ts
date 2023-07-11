@@ -2,7 +2,6 @@ import { loadConfiguration, saveConfiguration } from "./configuration";
 import { MediaList } from "./media-list";
 
 const config = await loadConfiguration();
-console.log(config);
 
 document.getElementById("import-button")?.addEventListener("click", importList);
 document.getElementById("export-button")?.addEventListener("click", exportList);

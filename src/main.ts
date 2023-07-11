@@ -14,7 +14,6 @@ const mediaList = await MediaList.fromStorage();
 await hydrate();
 
 async function hydrate() {
-    console.log(1);
     if (MEDIA_TYPES.includes(category) && title) {
         hydrateMedia(title);
     } else if (!VALID_MEDIA_TYPES.includes(category) && config.enableFiltering) {
