@@ -1,0 +1,20 @@
+{
+  "name": "pop-filter",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "build": "webpack --config webpack/webpack.config.js",
+    "watch": "webpack --config webpack/webpack.config.js --watch"
+  },
+  "keywords": [],
+  "author": "newo-2001",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/chrome": "^0.0.240",
+    "copy-webpack-plugin": "^11.0.0",
+    "ts-loader": "^9.4.4",
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
+  }
+}

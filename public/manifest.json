@@ -1,0 +1,24 @@
+{
+    "name": "Pop Filter",
+    "description": "Matthew Mercer 😳",
+    "version": "1.0",
+    "manifest_version": 3,
+    "permissions": [
+        "activeTab",
+        "storage"
+    ],
+    "action": {
+        "default_popup": "index.html"
+    },
+    "content_scripts": [
+        {
+            "js": [ "main.js" ],
+            "css": [ "main.css", "shared.css" ],
+            "matches": [ "https://www.behindthevoiceactors.com/*" ],
+            "run_at": "document_end"
+        }
+    ],
+    "icons": {
+        "64": "favicon.png"
+    }
+}
