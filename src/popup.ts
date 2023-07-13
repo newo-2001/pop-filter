@@ -1,5 +1,5 @@
 import { loadConfiguration, saveConfiguration } from "./configuration";
-import { MediaList } from "./media-list";
+import { MediaList } from "./models/media-list";
 
 const config = await loadConfiguration();
 
@@ -13,9 +13,8 @@ filteringEnabled.addEventListener("change", async () => {
     await saveConfiguration(config);
 });
 
-
 async function exportList(): Promise<void> {
-    const list = (await MediaList.fromStorage()).asJson();
+    const list = (await MediaList.fromStorage()).serializeJson();
     const blob = new Blob([list], { type: "text/json" });
 
     const anchor = document.createElement("a");
@@ -40,9 +39,7 @@ async function importList(): Promise<MediaList> {
             }
 
             const content = await file!.text()
-            const entries = JSON.parse(content);
-            const list = new MediaList(entries);
-            
+            const list = MediaList.deserializeJson(content);
             await list.saveToStorage();
 
             resolve(list);
