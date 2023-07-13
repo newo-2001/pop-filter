@@ -1,6 +1,6 @@
 import { ApplicationState } from "../models/application-state";
 import { MediaEntry } from "../models/media-entry";
-import { MediaLanguage } from "../models/media-language";
+import { MediaLanguage, flagForLanguage } from "../models/media-language";
 import { MEDIA_URL_NAMES, Medium } from "../models/medium";
 
 interface MediaInfo {
@@ -13,6 +13,9 @@ const VALID_MEDIA = [
     Medium.Movie,
     Medium.VideoGame
 ];
+
+const buttonsContainer = document.createElement("div");
+buttonsContainer.id = "pop-filter-buttons-container";
 
 export function injectMediaButons(state: ApplicationState): Promise<boolean> {
     const mediaInfo = parseUrl(state.url);
@@ -31,9 +34,10 @@ export function injectMediaButons(state: ApplicationState): Promise<boolean> {
             language
         };
 
-        createButton(entry, state);
+        buttonsContainer.appendChild(createButton(entry, state));
     }
 
+    header.appendChild(buttonsContainer);
     return Promise.resolve(true);
 }
 
@@ -41,7 +45,7 @@ function parseUrl(url: string): MediaInfo | undefined {
     const [, mediumName, title ] = url.split("/");
 
     const medium = MEDIA_URL_NAMES[mediumName];
-    if (!medium || !title) return undefined;
+    if (medium == undefined || !title) return undefined;
 
     return { medium, title };
 }
@@ -56,7 +60,7 @@ function getVoiceLanguages(): MediaLanguage[] {
         MediaLanguage.English,
     ];
 
-    if (Array.from(filters.children).some(element => element.innerHTML == "Japanese cast")) {
+    if (Array.from(filters.children).some(element => element.innerHTML == "Japanese Cast")) {
         languages.push(MediaLanguage.Japanese);
     }
 
@@ -64,15 +68,23 @@ function getVoiceLanguages(): MediaLanguage[] {
 }
 
 function createButton(entry: MediaEntry, state: ApplicationState): Node {
-    const button = document.createElement("button");
     const present = state.mediaList.contains(entry);
     
-    button.innerHTML = `${!present ? "+ Add to" : "- Remove from"} list`;
-    button.classList.add(`pop-filter-${!present ? "add" : "remove"}`);
+    const button = document.createElement("div");
+    button.classList.add(`pop-filter-${!present ? "confirm" : "danger"}`);
     button.classList.add(`pop-filter-button`);
+    
+    const text = document.createElement("span");
+    text.innerHTML = `${!present ? "+ Add to" : "- Remove from"} list`;
+    button.appendChild(text);
+
+    const img = document.createElement("img");
+    const flag = flagForLanguage(entry.language);
+    img.src = chrome.runtime.getURL(flag);
+    button.appendChild(img);
 
     button.onclick = async () => {
-        if (present) {
+        if (!present) {
             state.mediaList.add(entry);
         } else {
             state.mediaList.remove(entry);
@@ -80,8 +92,7 @@ function createButton(entry: MediaEntry, state: ApplicationState): Node {
 
         await state.mediaList.saveToStorage();
 
-        button.remove();
-        createButton(entry, state);
+        buttonsContainer.replaceChild(createButton(entry, state), button);
     }
 
     return button;

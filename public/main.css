@@ -5,3 +5,23 @@
 .pop-filter-add {
     background-color: var(--pop-filter-color-confirm);
 }
+
+#pop-filter-buttons-container {
+    margin-top: 1em;
+    display: flex;
+    flex-direction: row;
+}
+
+.pop-filter-button {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-right: 0.5em;
+}
+
+.pop-filter-button img {
+    margin-left: 0.5em;
+    height: 1em;
+    object-fit: contain;
+}

@@ -1,10 +1,10 @@
 export enum Medium {
-    TVShow,
-    Movie,
-    VideoGame,
-    Short,
-    Commercial,
-    RideAttraction
+    TVShow = "tv-show",
+    Movie = "movie",
+    VideoGame = "game",
+    Short = "short",
+    Commercial = "commercial",
+    RideAttraction = "attraction"
 }
 
 export const MEDIA_URL_NAMES: { [key: string]: Medium } = {

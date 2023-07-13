@@ -1,4 +1,4 @@
-import { MediaEntry } from "./media-entry";
+import { MediaEntry, mediaEntryFromId, mediaEntryId } from "./media-entry";
 
 const STORAGE_KEY = "media-list";
 const CURRENT_VERSION = 2;
@@ -14,25 +14,26 @@ interface MediaListManifest {
 }
 
 export class MediaList {
-    private entries: Set<MediaEntry>;
+    private entries: Set<string>;
 
     constructor(
         entries: MediaEntry[] = [],
         private version: number = CURRENT_VERSION
     ) {
-        this.entries = new Set(entries);
+        this.entries = new Set(entries.map(entry => mediaEntryId(entry)));
     }
 
     public add(entry: MediaEntry): void {
-        this.entries.add(entry);
+        this.entries.add(mediaEntryId(entry));
     }
 
     public remove(entry: MediaEntry): void {
-        this.entries.delete(entry);
+        this.entries.delete(mediaEntryId(entry));
     }
 
     public contains(entry: MediaEntry): boolean {
-        return this.entries.has(entry);
+        console.log(JSON.stringify(entry));
+        return this.entries.has(mediaEntryId(entry));
     }
 
     public saveToStorage(): Promise<void> {
@@ -70,7 +71,7 @@ export class MediaList {
 
     private createManifest(): MediaListManifest {
         return {
-            entries: Array.from(this.entries),
+            entries: Array.from(this.entries).map(mediaEntryFromId),
             version: this.version
         };
     }

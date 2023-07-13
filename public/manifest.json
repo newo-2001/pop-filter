@@ -10,6 +10,12 @@
     "action": {
         "default_popup": "index.html"
     },
+    "web_accessible_resources": [
+        {
+            "resources": [ "assets/flags/*.png" ],
+            "matches": [ "https://www.behindthevoiceactors.com/*" ]
+        }
+    ],
     "content_scripts": [
         {
             "js": [ "main.js" ],

@@ -6,6 +6,10 @@ main {
     font-family: sans-serif;
 }
 
+main > * {
+    margin: 0.5em;
+}
+
 #export-button, #import-button {
     background-color: var(--pop-filter-color-primary);
 }

@@ -6,3 +6,16 @@ export interface MediaEntry {
     language: MediaLanguage,
     medium: Medium
 }
+
+export function mediaEntryId(entry: MediaEntry): string {
+    return `${entry.medium}/${entry.title}/${entry.language}`;
+}
+
+export function mediaEntryFromId(id: string): MediaEntry {
+    const [ medium, title, language ] = id.split("/");
+    return {
+        medium: medium as Medium,
+        language: language as MediaLanguage,
+        title
+    };
+}
