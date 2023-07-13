@@ -4,10 +4,12 @@ import { MediaLanguage } from "../models/media-language";
 import { MEDIA_URL_NAMES } from "../models/medium";
 import { sleep } from "../utils";
 
-export async function filterRoles(state: ApplicationState): Promise<void> {
+export async function filterRoles(state: ApplicationState): Promise<boolean> {
+    if (!isVoiceActorPage(state)) return false;
+
     const rolesContainer = document.getElementById("credit_pics_voiceactors");
     if (!rolesContainer) {
-        return console.error("Missing credit_pics_voiceactors element on voice actor page");
+        throw new Error("Missing credit_pics_voiceactors element on voice actor page");
     }
 
     await forceLazyEvaluation();
@@ -19,6 +21,24 @@ export async function filterRoles(state: ApplicationState): Promise<void> {
     for (const role of roles) {
         role.tag.remove();
     }
+
+    return true;
+}
+
+const NOT_VA_SECTIONS: string[] = [
+    ...Object.keys(MEDIA_URL_NAMES),
+    "team-ups", "voice-compare",
+    "voice-directors", "franchises",
+    "news", "top-listings", "coming-soon",
+    "quotes", "forums", "about",
+    "content-guidelines", "contact",
+    "terms-of-use", "privacy-policy",
+    "franchises"
+];
+
+function isVoiceActorPage(state: ApplicationState): boolean {
+    const [, section ] = state.url.split("/");
+    return !!section && !NOT_VA_SECTIONS.includes(section);
 }
 
 // This function is hella sketchy

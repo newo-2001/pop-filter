@@ -14,15 +14,15 @@ const VALID_MEDIA = [
     Medium.VideoGame
 ];
 
-export function injectMediaButons(state: ApplicationState): Promise<void> {
+export function injectMediaButons(state: ApplicationState): Promise<boolean> {
     const mediaInfo = parseUrl(state.url);
     if (!mediaInfo || !VALID_MEDIA.includes(mediaInfo.medium)) {
-        return Promise.reject("Url did not match media page");
+        return Promise.resolve(false);
     }
 
     const header = document.getElementById("medium_heading");
     if (!header) {
-        return Promise.reject("Missing medium_heading element on media page");
+        return Promise.reject(new Error("Missing medium_heading element on media page"));
     }
 
     for (const language of getVoiceLanguages()) {
@@ -34,7 +34,7 @@ export function injectMediaButons(state: ApplicationState): Promise<void> {
         createButton(entry, state);
     }
 
-    return Promise.resolve();
+    return Promise.resolve(true);
 }
 
 function parseUrl(url: string): MediaInfo | undefined {

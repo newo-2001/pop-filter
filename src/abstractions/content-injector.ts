@@ -1,3 +1,3 @@
 import { ApplicationState } from "../models/application-state"
 
-export type ContentInjector = (state: ApplicationState) => Promise<void>;
+export type ContentInjector = (state: ApplicationState) => Promise<boolean>;
