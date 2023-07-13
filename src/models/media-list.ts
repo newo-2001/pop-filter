@@ -3,6 +3,11 @@ import { MediaEntry } from "./media-entry";
 const STORAGE_KEY = "media-list";
 const CURRENT_VERSION = 2;
 
+const EMPTY_LIST_MANIFEST: MediaListManifest = {
+    entries: [],
+    version: CURRENT_VERSION
+};
+
 interface MediaListManifest {
     version: number,
     entries: MediaEntry[]
@@ -37,7 +42,7 @@ export class MediaList {
 
     public static async fromStorage(): Promise<MediaList> {
         const manifest = (await chrome.storage.sync.get(null))[STORAGE_KEY]
-            ?? { entries: [], version: CURRENT_VERSION } as MediaListManifest;
+            ?? EMPTY_LIST_MANIFEST as MediaListManifest;
 
         return MediaList.fromManifest(manifest);
     }
@@ -51,8 +56,16 @@ export class MediaList {
         return this.fromManifest(manifest);
     }
 
+    public static clearStorage(): Promise<void> {
+        return chrome.storage.sync.set({ [STORAGE_KEY]: EMPTY_LIST_MANIFEST });
+    }
+
     public getVersion(): number {
         return this.version;
+    }
+
+    public cardinality(): number {
+        return this.entries.size;
     }
 
     private createManifest(): MediaListManifest {

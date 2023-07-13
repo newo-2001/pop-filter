@@ -1,3 +1,21 @@
+:root {
+    --pop-filter-color-danger: rgb(255, 96, 96);
+    --pop-filter-color-confirm: rgb(93, 181, 93);
+    --pop-filter-color-primary: rgb(206, 195, 0);
+}
+
+.pop-filter-danger {
+    background-color: var(--pop-filter-color-danger);
+}
+
+.pop-filter-confirm {
+    background-color: var(--pop-filter-color-confirm);
+}
+
+.pop-filter-primary {
+    background-color: var(--pop-filter-color-primary);
+}
+
 .pop-filter-button {
     border-radius: 5px;
     font-family: sans-serif;
@@ -8,4 +26,8 @@
     padding: 0.7em;
     margin-bottom: 1em;
     border: none;
+}
+
+.pop-filter-button:active {
+    filter: brightness(90%);
 }

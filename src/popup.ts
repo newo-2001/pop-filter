@@ -2,9 +2,13 @@ import { loadConfiguration, saveConfiguration } from "./configuration";
 import { MediaList } from "./models/media-list";
 
 const config = await loadConfiguration();
+const mediaList = await MediaList.fromStorage();
 
 document.getElementById("import-button")?.addEventListener("click", importList);
 document.getElementById("export-button")?.addEventListener("click", exportList);
+document.getElementById("delete-button")?.addEventListener("click", deleteList);
+
+updateEntryCount(mediaList.cardinality());
 
 const filteringEnabled = document.getElementById("filtering-enabled") as HTMLInputElement;
 filteringEnabled.checked = config.enableFiltering;
@@ -41,10 +45,22 @@ async function importList(): Promise<MediaList> {
             const content = await file!.text()
             const list = MediaList.deserializeJson(content);
             await list.saveToStorage();
+            
+            updateEntryCount(list.cardinality());
 
             resolve(list);
         }
 
         fileInput.click();
     })
+}
+
+function deleteList(): Promise<void> {
+    updateEntryCount(0);
+    return MediaList.clearStorage();
+}
+
+function updateEntryCount(count: number) {
+    document.getElementById("entry-count")!.innerHTML = "" + count;
+    document.getElementById("entry-count-plural")!.innerHTML = count == 1 ? "y" : "ies";
 }

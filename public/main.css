@@ -1,7 +1,7 @@
 .pop-filter-remove {
-    background-color: rgb(255, 96, 96);
+    background-color: var(--pop-filter-color-danger);
 }
 
 .pop-filter-add {
-    background-color: rgb(93, 181, 93);
+    background-color: var(--pop-filter-color-confirm);
 }
