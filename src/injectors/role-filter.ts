@@ -5,7 +5,7 @@ import { MEDIA_URL_NAMES } from "../models/medium";
 import { sleep } from "../utils";
 
 export async function filterRoles(state: ApplicationState): Promise<boolean> {
-    if (!isVoiceActorPage(state)) return false;
+    if (!isVoiceActorPage(state) || !state.configuration.enableFiltering) return false;
 
     const rolesContainer = document.getElementById("credit_pics_voiceactors");
     if (!rolesContainer) {
