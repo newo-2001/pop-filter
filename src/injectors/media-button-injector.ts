@@ -42,10 +42,10 @@ export function injectMediaButons(state: ApplicationState): Promise<boolean> {
 }
 
 function parseUrl(url: string): MediaInfo | undefined {
-    const [, mediumName, title ] = url.split("/");
+    const [, mediumName, title, extra ] = url.split("/");
 
     const medium = MEDIA_URL_NAMES[mediumName];
-    if (medium == undefined || !title) return undefined;
+    if (medium == undefined || !title || extra) return undefined;
 
     return { medium, title };
 }
