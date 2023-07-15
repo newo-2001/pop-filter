@@ -32,7 +32,6 @@ export class MediaList {
     }
 
     public contains(entry: MediaEntry): boolean {
-        console.log(JSON.stringify(entry));
         return this.entries.has(mediaEntryId(entry));
     }
 

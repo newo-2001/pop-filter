@@ -1,10 +1,12 @@
 export interface Configuration {
-    enableFiltering: boolean
+    enableFiltering: boolean,
+    enableLanguageFilter: boolean
 }
 
 const CONFIG_KEY = "config";
 const defaultConfig: Configuration = {
-    enableFiltering: true
+    enableFiltering: true,
+    enableLanguageFilter: true
 }
 
 export function saveConfiguration(config: Configuration): Promise<void> {

@@ -14,11 +14,13 @@ export async function filterRoles(state: ApplicationState): Promise<boolean> {
 
     await forceLazyEvaluation();
 
-    const roles = findAllVoiceRoles()
-        .map(tag => ({ entry: extractEntryFromRoleElement(tag as HTMLDivElement), tag }))
-        .filter(role => !state.mediaList.contains(role.entry));
+    const rolesToRemove = findAllVoiceRoles()
+        .map(tag => ({ entries: extractEntriesFromRoleElement(tag as HTMLDivElement, state), tag }))
+        .filter(role => {
+            return !role.entries.some(entry => state.mediaList.contains(entry))
+        });
 
-    for (const role of roles) {
+    for (const role of rolesToRemove) {
         role.tag.remove();
     }
 
@@ -66,7 +68,7 @@ function findAllVoiceRoles(): ChildNode[] {
         .filter(tag => tag instanceof HTMLDivElement && tag.className.startsWith("medium_msn"));
 }
 
-function extractEntryFromRoleElement(tag: HTMLDivElement): MediaEntry {
+function extractEntriesFromRoleElement(tag: HTMLDivElement, state: ApplicationState): MediaEntry[] {
     const role = tag.firstChild as HTMLAnchorElement;
     const [,,, mediumName, title ] = role.href.split("/");
     
@@ -75,7 +77,11 @@ function extractEntryFromRoleElement(tag: HTMLDivElement): MediaEntry {
         throw new Error(`Failed to extract medium from role ${role.href}`);
     }
 
-    return { medium, title, language: getVoiceLanguage() }
+    return state.configuration.enableLanguageFilter
+        ? [{ medium, title, language: getVoiceLanguage() }]
+        : Object.values(MediaLanguage).map(language => ({
+            medium, title, language
+        }));
 }
 
 const languageNames: { [key: string]: MediaLanguage } = {

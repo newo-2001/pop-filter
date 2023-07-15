@@ -17,6 +17,13 @@ filteringEnabled.addEventListener("change", async () => {
     await saveConfiguration(config);
 });
 
+const languageFilterEnabled = document.getElementById("language-filter-enabled") as HTMLInputElement;
+languageFilterEnabled.checked = config.enableLanguageFilter;
+languageFilterEnabled.addEventListener("change", async () => {
+    config.enableLanguageFilter = languageFilterEnabled.checked;
+    await saveConfiguration(config);
+});
+
 async function exportList(): Promise<void> {
     const list = (await MediaList.fromStorage()).serializeJson();
     const blob = new Blob([list], { type: "text/json" });
