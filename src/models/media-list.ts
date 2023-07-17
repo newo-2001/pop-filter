@@ -37,11 +37,11 @@ export class MediaList {
 
     public saveToStorage(): Promise<void> {
         const manifest = this.createManifest();
-        return chrome.storage.sync.set({ [STORAGE_KEY]: manifest });
+        return chrome.storage.local.set({ [STORAGE_KEY]: manifest });
     }
 
     public static async fromStorage(): Promise<MediaList> {
-        const manifest = (await chrome.storage.sync.get(null))[STORAGE_KEY]
+        const manifest = (await chrome.storage.local.get(null))[STORAGE_KEY]
             ?? EMPTY_LIST_MANIFEST as MediaListManifest;
 
         return MediaList.fromManifest(manifest);
@@ -57,7 +57,7 @@ export class MediaList {
     }
 
     public static clearStorage(): Promise<void> {
-        return chrome.storage.sync.set({ [STORAGE_KEY]: EMPTY_LIST_MANIFEST });
+        return chrome.storage.local.set({ [STORAGE_KEY]: EMPTY_LIST_MANIFEST });
     }
 
     public getVersion(): number {

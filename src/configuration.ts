@@ -10,10 +10,10 @@ const defaultConfig: Configuration = {
 }
 
 export function saveConfiguration(config: Configuration): Promise<void> {
-    return chrome.storage.sync.set({ [CONFIG_KEY]: config });
+    return chrome.storage.local.set({ [CONFIG_KEY]: config });
 }
 
 export async function loadConfiguration(): Promise<Configuration> {
-    return (await chrome.storage.sync.get(null))[CONFIG_KEY]
+    return (await chrome.storage.local.get(null))[CONFIG_KEY]
         ?? defaultConfig as Configuration;
 }
