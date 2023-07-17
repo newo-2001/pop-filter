@@ -1,5 +1,6 @@
 const path = require("path");
 const CopyPlugin = require("copy-webpack-plugin");
+const ZipPlugin = require("zip-webpack-plugin");
 
 module.exports = {
     mode: "production",
@@ -32,6 +33,10 @@ module.exports = {
                     context: "public"
                 }
             ]
+        }),
+        new ZipPlugin({
+            path: "../release",
+            filename: "pop-filter.zip",
         })
     ],
     watchOptions: {
