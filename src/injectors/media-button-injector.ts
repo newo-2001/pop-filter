@@ -51,20 +51,20 @@ function parseUrl(url: string): MediaInfo | undefined {
 }
 
 function getVoiceLanguages(): MediaLanguage[] {
-    const filters = document.getElementById("medium_chars_view_by");
-    if (!filters) {
+    const filtersContainer = document.getElementById("medium_chars_view_by");
+    if (!filtersContainer) {
         throw new Error("Couldn't find element with id 'medium_chars_view_by' on voice page");
     }
 
-    const languages = [
-        MediaLanguage.English,
-    ];
+    const filters = Array.from(filtersContainer.children);
 
-    if (Array.from(filters.children).some(element => element.innerHTML == "Japanese Cast")) {
-        languages.push(MediaLanguage.Japanese);
+    if (filters.some(element => element.innerHTML == "Japanese Cast")) {
+        return [ MediaLanguage.English, MediaLanguage.Japanese ]
+    } else if (filters.some(element => element.innerHTML == "Japanese Voice Cast")) {
+        return [ MediaLanguage.Japanese ];
     }
 
-    return languages;
+    return [MediaLanguage.English]
 }
 
 function createButton(entry: MediaEntry, state: ApplicationState): Node {
