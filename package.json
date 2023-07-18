@@ -17,5 +17,9 @@
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4",
     "zip-webpack-plugin": "^4.0.1"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13",
+    "tsyringe": "^4.8.0"
   }
 }
