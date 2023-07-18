@@ -13,4 +13,5 @@ export const MEDIA_URL_NAMES: { [key: string]: Medium } = {
     "shorts": Medium.Short,
     "video-games": Medium.VideoGame,
     "commercials": Medium.Commercial,
+    "rides-attractions": Medium.RideAttraction
 };
