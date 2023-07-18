@@ -35,7 +35,7 @@ const NOT_VA_SECTIONS: string[] = [
     "quotes", "forums", "about",
     "content-guidelines", "contact",
     "terms-of-use", "privacy-policy",
-    "franchises", "search"
+    "franchises", "search", "game-developers"
 ];
 
 function isVoiceActorPage(state: ApplicationState): boolean {
