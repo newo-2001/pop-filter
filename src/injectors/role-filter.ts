@@ -39,8 +39,8 @@ const NOT_VA_SECTIONS: string[] = [
 ];
 
 function isVoiceActorPage(state: ApplicationState): boolean {
-    const [, section ] = state.url.split("/");
-    return !!section && !NOT_VA_SECTIONS.includes(section);
+    const [, section, extra ] = state.url.split("/");
+    return !!section && !NOT_VA_SECTIONS.includes(section) && !extra;
 }
 
 // This function is hella sketchy
