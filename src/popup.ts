@@ -46,7 +46,7 @@ async function importList(): Promise<MediaList> {
         fileInput.onchange = async () => {
             const file = fileInput?.files?.[0];
             if (!file) {
-                reject("Failed to select file");
+                return reject("Failed to select file");
             }
 
             const content = await file!.text()
