@@ -1,4 +1,6 @@
 export const TOKENS = {
-    State: Symbol(),
-    ContentInjector: Symbol()
+    ContentInjector: Symbol(),
+    StorageProvider: Symbol(),
+    Configuration: Symbol(),
+    Url: Symbol()
 };

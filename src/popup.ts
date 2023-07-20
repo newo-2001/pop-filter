@@ -1,8 +1,16 @@
-import { loadConfiguration, saveConfiguration } from "./configuration";
-import { MediaList } from "./models/media-list";
+import "reflect-metadata";
+import "./service-registry";
+import { container, } from "tsyringe";
+import { MediaList, MediaListManifest } from "./models/media-list";
+import { TOKENS } from "./abstractions/tokens";
+import { Configuration } from "./configuration";
+import { ConfigurationService } from "./services/configuration-service";
+import { MediaListService } from "./services/media-list-service";
 
-const config = await loadConfiguration();
-const mediaList = await MediaList.fromStorage();
+const mediaListService = container.resolve(MediaListService);
+const configService = container.resolve(ConfigurationService);
+const config = container.resolve<Configuration>(TOKENS.Configuration);
+const mediaList = container.resolve(MediaList);
 
 document.getElementById("import-button")?.addEventListener("click", importList);
 document.getElementById("export-button")?.addEventListener("click", exportList);
@@ -14,19 +22,22 @@ const filteringEnabled = document.getElementById("filtering-enabled") as HTMLInp
 filteringEnabled.checked = config.enableFiltering;
 filteringEnabled.addEventListener("change", async () => {
     config.enableFiltering = filteringEnabled.checked;
-    await saveConfiguration(config);
+    await configService.saveConfiguration(config);
 });
 
 const languageFilterEnabled = document.getElementById("language-filter-enabled") as HTMLInputElement;
 languageFilterEnabled.checked = config.enableLanguageFilter;
 languageFilterEnabled.addEventListener("change", async () => {
     config.enableLanguageFilter = languageFilterEnabled.checked;
-    await saveConfiguration(config);
+    await configService.saveConfiguration(config);
 });
 
 async function exportList(): Promise<void> {
-    const list = (await MediaList.fromStorage()).serializeJson();
-    const blob = new Blob([list], { type: "text/json" });
+    // Retrieve list from storage to synchronize with the content scripts
+    // This should actually be done via message passing
+    const list = await mediaListService.getList();
+    const data = JSON.stringify(list.manifest());
+    const blob = new Blob([ data ], { type: "text/json" });
 
     const anchor = document.createElement("a");
     anchor.href = window.URL.createObjectURL(blob);
@@ -50,8 +61,9 @@ async function importList(): Promise<MediaList> {
             }
 
             const content = await file!.text()
-            const list = MediaList.deserializeJson(content);
-            await list.saveToStorage();
+            const manifest = JSON.parse(content) as MediaListManifest;
+            const list = new MediaList(manifest);
+            await mediaListService.saveList(list);
             
             updateEntryCount(list.cardinality());
 
@@ -64,7 +76,7 @@ async function importList(): Promise<MediaList> {
 
 function deleteList(): Promise<void> {
     updateEntryCount(0);
-    return MediaList.clearStorage();
+    return mediaListService.deleteList();
 }
 
 function updateEntryCount(count: number) {

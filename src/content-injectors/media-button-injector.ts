@@ -1,12 +1,13 @@
 import { inject, injectable } from "tsyringe";
 import { ContentInjector } from "../abstractions/content-injector";
-import { ApplicationState } from "../models/application-state";
 import { MediaEntry } from "../models/media-entry";
 import { MediaLanguage, flagForLanguage } from "../models/media-language";
 import { MEDIA_URL_NAMES, Medium } from "../models/medium";
 import { TOKENS } from "../abstractions/tokens";
+import { MediaList } from "../models/media-list";
+import { MediaListService } from "../services/media-list-service";
 
-interface MediaInfo {
+type MediaInfo = {
     medium: Medium,
     title: string
 }
@@ -23,35 +24,37 @@ buttonsContainer.id = "pop-filter-buttons-container";
 @injectable()
 export class MediaButtonInjector implements ContentInjector {
     public constructor(
-        @inject(TOKENS.State) private readonly state: ApplicationState
+        @inject(MediaListService) private readonly mediaListService: MediaListService,
+        @inject(MediaList) private readonly mediaList: MediaList,
+        @inject(TOKENS.Url) private readonly url: string
     ) { }
 
-    public injectContent(): Promise<boolean> {
+    public async injectContent(): Promise<boolean> {
         const mediaInfo = this.parseUrl();
         if (!mediaInfo || !VALID_MEDIA.includes(mediaInfo.medium)) {
-            return Promise.resolve(false);
+            return false;
         }
 
         const header = document.getElementById("medium_heading");
         if (!header) {
-            return Promise.reject(new Error("Missing medium_heading element on media page"));
+            throw new Error("Missing medium_heading element on media page");
         }
 
         for (const language of MediaButtonInjector.getVoiceLanguages()) {
-            const entry: MediaEntry = {
+            const entry: MediaEntry = new MediaEntry({
                 ...mediaInfo,
                 language
-            };
+            });
 
-            buttonsContainer.appendChild(this.createButton(entry));
+            buttonsContainer.appendChild(await this.createButton(entry));
         }
 
         header.appendChild(buttonsContainer);
-        return Promise.resolve(true);
+        return true;
     }
 
     private parseUrl(): MediaInfo | undefined {
-        const [, mediumName, title, extra ] = this.state.url.split("/");
+        const [, mediumName, title, extra ] = this.url.split("/");
 
         const medium = MEDIA_URL_NAMES[mediumName];
         if (medium == undefined || !title || extra) return undefined;
@@ -73,11 +76,11 @@ export class MediaButtonInjector implements ContentInjector {
             return [ MediaLanguage.Japanese ];
         }
 
-        return [MediaLanguage.English]
+        return [ MediaLanguage.English ];
     }
 
-    private createButton(entry: MediaEntry): Node {
-        const present = this.state.mediaList.contains(entry);
+    private async createButton(entry: MediaEntry): Promise<Node> {
+        const present = this.mediaList.contains(entry);
         
         const button = document.createElement("div");
         button.classList.add(`pop-filter-${!present ? "confirm" : "danger"}`);
@@ -94,14 +97,14 @@ export class MediaButtonInjector implements ContentInjector {
 
         button.onclick = async () => {
             if (!present) {
-                this.state.mediaList.add(entry);
+                this.mediaList.add(entry);
             } else {
-                this.state.mediaList.remove(entry);
+                this.mediaList.remove(entry);
             }
 
-            await this.state.mediaList.saveToStorage();
+            await this.mediaListService.saveList(this.mediaList);
 
-            buttonsContainer.replaceChild(this.createButton(entry), button);
+            buttonsContainer.replaceChild(await this.createButton(entry), button);
         }
 
         return button;

@@ -1,20 +1,23 @@
 import { injectable, inject } from "tsyringe";
 import { ContentInjector } from "../abstractions/content-injector";
 import { TOKENS } from "../abstractions/tokens";
-import { ApplicationState } from "../models/application-state";
 import { MediaEntry } from "../models/media-entry";
 import { MediaLanguage } from "../models/media-language";
 import { MEDIA_URL_NAMES } from "../models/medium";
 import { sleep } from "../utils";
+import { Configuration } from "../configuration";
+import { MediaList } from "../models/media-list";
 
 @injectable()
 export class RoleFilter implements ContentInjector {
     public constructor(
-        @inject(TOKENS.State) private readonly state: ApplicationState
+        @inject(MediaList) private readonly mediaList: MediaList,
+        @inject(TOKENS.Configuration) private readonly config: Configuration,
+        @inject(TOKENS.Url) private readonly url: string
     ) { }
 
     public async injectContent(): Promise<boolean> {
-        if (!this.isVoiceActorPage() || !this.state.configuration.enableFiltering) return false;
+        if (!this.isVoiceActorPage() || !this.config.enableFiltering) return false;
 
         const rolesContainer = document.getElementById("credit_pics_voiceactors");
         if (!rolesContainer) {
@@ -26,14 +29,14 @@ export class RoleFilter implements ContentInjector {
         RoleFilter.findAllVoiceRoles()
             .map(tag => ({ entries: this.extractEntriesFromRoleElement(tag as HTMLDivElement), tag }))
             .filter(role => {
-                return !role.entries.some(entry => this.state.mediaList.contains(entry))
+                return !role.entries.some(entry => this.mediaList.contains(entry))
             }).forEach(role => role.tag.remove());
 
         return true;
     }
 
     private isVoiceActorPage(): boolean {
-        const [, section ] = this.state.url.split("/");
+        const [, section ] = this.url.split("/");
         return !!section && !NOT_VA_SECTIONS.includes(section);
     }
 
@@ -45,10 +48,10 @@ export class RoleFilter implements ContentInjector {
         if (!medium) {
             throw new Error(`Failed to extract medium from role ${role.href}`);
         }
-
-        return this.state.configuration.enableLanguageFilter
-            ? [{ medium, title, language: RoleFilter.getVoiceLanguage() }]
-            : Object.values(MediaLanguage).map(language => ({
+        
+        return this.config.enableLanguageFilter
+            ? [ new MediaEntry({ medium, title, language: RoleFilter.getVoiceLanguage() }) ]
+            : Object.values(MediaLanguage).map(language => new MediaEntry({
                 medium, title, language
             }));
     }
