@@ -6,7 +6,8 @@ module.exports = {
     mode: "production",
     entry: {
         main: path.resolve(__dirname, "..", "src", "main.ts"),
-        popup: path.resolve(__dirname, "..", "src", "popup.ts")
+        popup: path.resolve(__dirname, "..", "src", "popup.ts"),
+        worker: path.resolve(__dirname, "..", "src", "worker.ts")
     },
     output: {
         path: path.join(__dirname, "../dist"),

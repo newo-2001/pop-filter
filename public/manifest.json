@@ -26,5 +26,9 @@
     ],
     "icons": {
         "64": "favicon.png"
+    },
+    "background": {
+        "service_worker": "worker.js",
+        "type": "module"
     }
 }
