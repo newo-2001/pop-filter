@@ -1,6 +1,6 @@
 {
   "name": "pop-filter",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "description": "",
   "scripts": {
     "build": "webpack --config webpack/webpack.config.js",
