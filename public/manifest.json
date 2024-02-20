@@ -26,5 +26,10 @@
     ],
     "icons": {
         "64": "favicon.png"
+    },
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "newo2001@pop-filter.com"
+        }
     }
 }

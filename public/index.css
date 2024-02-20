@@ -10,12 +10,8 @@ main > * {
     margin: 0.5em;
 }
 
-#export-button, #import-button {
+#manage-button {
     background-color: var(--pop-filter-color-primary);
-}
-
-#delete-button {
-    background-color: var(--pop-filter-color-danger);
 }
 
 div {

@@ -1,0 +1,24 @@
+main {
+    display: flex;
+    flex-direction: column;
+    min-width: 200px;
+    font-weight: bold;
+    font-family: sans-serif;
+    max-width: 200px;
+}
+
+main > * {
+    margin: 0.5em;
+}
+
+#export-button, #import-button {
+    background-color: var(--pop-filter-color-primary);
+}
+
+#delete-button {
+    background-color: var(--pop-filter-color-danger);
+}
+
+p {
+    font-size: 1.2em;
+}
