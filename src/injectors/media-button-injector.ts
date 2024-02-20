@@ -75,7 +75,7 @@ function createButton(entry: MediaEntry, state: ApplicationState): Node {
     button.classList.add(`pop-filter-button`);
     
     const text = document.createElement("span");
-    text.innerHTML = `${!present ? "+ Add to" : "- Remove from"} list`;
+    text.innerText = `${!present ? "+ Add to" : "- Remove from"} list`;
     button.appendChild(text);
 
     const img = document.createElement("img");

@@ -5,7 +5,7 @@
 # Building from source
 
 ## Prerequisites
-1. [Node.js](https://nodejs.org/en), tested for version 18, if you encounter any problems with an older version, please open a [GitHub](https://github.com/newo-2001/pop-filter) issue and I will consider backporting support to older versions.
+1. [Node.js](https://nodejs.org/en), tested for version 18.19.1, if you encounter any problems with an older version, please open a [GitHub](https://github.com/newo-2001/pop-filter) issue and I will consider backporting support to older versions.
 2. A browser that supports extensions, Chrome and Firefox are officially supported.
 
 ## Building the extension

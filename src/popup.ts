@@ -29,6 +29,6 @@ async function manage() {
 }
 
 function updateEntryCount(count: number) {
-    document.getElementById("entry-count")!.innerHTML = "" + count;
-    document.getElementById("entry-count-plural")!.innerHTML = count == 1 ? "y" : "ies";
+    document.getElementById("entry-count")!.innerText = "" + count;
+    document.getElementById("entry-count-plural")!.innerText = count == 1 ? "y" : "ies";
 }
