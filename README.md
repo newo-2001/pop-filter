@@ -1,6 +1,6 @@
 # Installing the extension
 ## Option 1 (Firefox only) - Install through AMO
-We are now available from on [addons.mozila.org](https://addons.mozilla.org/en-US/firefox/addon/pop-filter/)!
+We are now available on [addons.mozila.org](https://addons.mozilla.org/en-US/firefox/addon/pop-filter/)!
 
 ## Option 2 - Manually import GitHub release
 1. Download the extension from the [GitHub releases page](https://github.com/newo-2001/pop-filter/releases).
